@@ -5,9 +5,10 @@ package axel.paccalin.channelmessaging;
  */
 
 public class Callback {
-    private String username;
-    private  String password;
-    private String accesstokens;
+    public String username;
+    public  String password;
+    public int code;
+    public String accesstokens;
 
     public Callback() {
 

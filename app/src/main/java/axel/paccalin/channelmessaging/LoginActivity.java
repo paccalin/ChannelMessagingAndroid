@@ -3,15 +3,18 @@ package axel.paccalin.channelmessaging;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.content.SharedPreferences;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
 
 import java.util.HashMap;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener, OnDownloadCompleteListener{
+    public static final String PREFS_NAME = "stockage";
     private Button btn_login;
     private TextView lbl_password;
     private TextView lbl_userName;
@@ -38,8 +41,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         if(v.getId() == R.id.btn_login)
         {
             HashMap<String, String> connectInfo = new HashMap<>();
-            connectInfo.put("id",txt_userName.getText().toString());
-            connectInfo.put("mdp", txt_password.getText().toString());
+            connectInfo.put("username",txt_userName.getText().toString());
+            connectInfo.put("password", txt_password.getText().toString());
             Async Async = new Async(getApplicationContext(), connectInfo);
             Async.setOnDownloadCompleteListener((OnDownloadCompleteListener) this);
             Async.execute();
@@ -50,9 +53,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onDownloadComplete(String result) {
 
         Gson gson = new Gson();
-        Callback obj = new Callback();
-        String json = gson.toJson(obj);
 
+        Callback r = gson.fromJson(result, Callback.class);
+        if(r.code==200){
+
+            Toast.makeText(this, "Vous êtes connecté ! ", Toast.LENGTH_SHORT).show();
+            SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("accesstoken", r.accesstokens);
+
+        }
+        else{
+            Toast.makeText(this, "Erreur de connexion", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
