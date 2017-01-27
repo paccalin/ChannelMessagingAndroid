@@ -1,5 +1,6 @@
 package axel.paccalin.channelmessaging;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             HashMap<String, String> connectInfo = new HashMap<>();
             connectInfo.put("username",txt_userName.getText().toString());
             connectInfo.put("password", txt_password.getText().toString());
-            Async Async = new Async(getApplicationContext(), connectInfo);
+            Async Async = new Async(getApplicationContext(), "http://www.raphaelbischof.fr/messaging/?function=connect", connectInfo);
             Async.setOnDownloadCompleteListener((OnDownloadCompleteListener) this);
             Async.execute();
         }
@@ -54,20 +55,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         Gson gson = new Gson();
 
-        Callback r = gson.fromJson(result, Callback.class);
+        CallbackLogin r = gson.fromJson(result, CallbackLogin.class);
         if(r.code==200){
-
             Toast.makeText(this, "Vous êtes connecté ! ", Toast.LENGTH_SHORT).show();
             SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
             SharedPreferences.Editor editor = settings.edit();
             editor.putString("accesstoken", r.accesstokens);
-
+            Intent ChannelList = new Intent(getApplicationContext(),ChannelListActivity.class);
+            startActivity(ChannelList);
         }
         else{
             Toast.makeText(this, "Erreur de connexion", Toast.LENGTH_SHORT).show();
         }
     }
-
-
-
 }

@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -25,13 +26,15 @@ public class Async extends AsyncTask<Long,Integer, String> {
 
     private Context myContext;
     private HashMap<String, String> connectInfo = new HashMap<>();
+    private String url;
 
     public ArrayList<OnDownloadCompleteListener> listeners = new ArrayList<>();
 
-    public Async(Context myContext, HashMap connectInfo)
+    public Async(Context myContext, String url, HashMap connectInfo)
     {
         this.myContext = myContext;
         this.connectInfo = connectInfo;
+        this.url = url;
     }
 
     @Override protected void onPreExecute()
@@ -48,7 +51,7 @@ public class Async extends AsyncTask<Long,Integer, String> {
 
     @Override protected String doInBackground(Long... arg0)
     {
-        return performPostCall("http://www.raphaelbischof.fr/messaging/?function=connect", connectInfo);
+        return performPostCall(this.url, connectInfo);
     }
 
     @Override protected void onPostExecute(String result)
