@@ -9,7 +9,9 @@ import java.util.List;
  */
 
 public class CallbackChannels {
-    public ArrayList<Channel> channels;
+    public int code;
+    public ArrayList<Channel> channels = new ArrayList<>();
+    public int connectedusers;
 
     public CallbackChannels() {
 
