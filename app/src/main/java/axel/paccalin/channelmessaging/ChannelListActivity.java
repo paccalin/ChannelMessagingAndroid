@@ -19,6 +19,7 @@ import java.util.Map;
 import java.util.List;
 
 public class ChannelListActivity extends AppCompatActivity implements AdapterView.OnItemClickListener, OnDownloadCompleteListener{
+    public static final String PREFS_NAME = "stockage";
 
     private ListView lvChannels;
     private ArrayList<Channel> channelList = new ArrayList<>();
@@ -38,8 +39,12 @@ public class ChannelListActivity extends AppCompatActivity implements AdapterVie
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        Toast.makeText(this, "J'ai sélectionné l'item " + position, Toast.LENGTH_SHORT).show();
-        Log.d("monApplication", "J'ai sélectionné l'item " + position);
+        Channel selectedChannel = this.channelList.get(position);
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putInt("channelId", selectedChannel.channelID);
+        editor.commit();
     }
 
     public void loadChannels(){
